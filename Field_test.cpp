@@ -12,10 +12,12 @@ class Field_test {
   bool test_isEmpty();
   bool test_getNum();
   bool test_putNum();
+  bool test_isPossible();
 };
 
 bool Field_test::test() {
-  return (test_Field() && test_isEmpty() && test_getNum() && test_putNum());
+  return (test_Field() && test_isEmpty() && test_getNum() && test_putNum() &&
+      test_isPossible());
 }
 
 bool Field_test::test_Field() {
@@ -70,6 +72,21 @@ bool Field_test::test_putNum() {
   }
   num = 10;
   if (f.putNum(num)) {
+    return false;
+  }
+  return true;
+}
+
+bool Field_test::test_isPossible() {
+  short num = 0;
+  short poss = 1;
+  Field f = Field(num);
+  if (!f.isPossible(poss)) {
+    return false;
+  }
+  num = 3;
+  f = Field(num);
+  if (f.isPossible(poss)) {
     return false;
   }
   return true;
