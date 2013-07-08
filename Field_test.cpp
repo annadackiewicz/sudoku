@@ -68,6 +68,10 @@ bool Field_test::test_putNum() {
   if (f.putNum(num)) {
     return false;
   }
+  num = 10;
+  if (f.putNum(num)) {
+    return false;
+  }
   return true;
 }
 

@@ -1,5 +1,7 @@
 #include "Field.hpp"
 
+#include "Utils.hpp"
+
 Field::Field() : num (0) {
 }
 
@@ -22,8 +24,10 @@ short Field::getNum() {
 
 bool Field::putNum(short _num) {
   if (!num) {
-    num = _num;
-    return true;
+    if (_num >= min_num && _num <= max_num) {
+      num = _num;  
+      return true;
+    }
   }
   return false;
 }
