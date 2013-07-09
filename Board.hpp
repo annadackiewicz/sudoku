@@ -24,6 +24,8 @@ class Board {
 
   void printPossibilities();
 
+  bool isTheSameBoard(Board* b);
+
  private:
   vector<vector<Field> > board;
 

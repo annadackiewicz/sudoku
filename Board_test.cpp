@@ -11,10 +11,12 @@ class Board_test {
  private:
   bool test_Board();
   bool test_setPossibilities();
+
+  bool test_isTheSameBoard();
 };
 
 bool Board_test::test() {
-  return (test_Board() && test_setPossibilities());
+  return (test_Board() && test_setPossibilities() && test_isTheSameBoard());
 }
 
 bool Board_test::test_Board() {
@@ -54,7 +56,7 @@ bool Board_test::test_Board() {
 }
 
 bool Board_test::test_setPossibilities() {
-  string _board_1 = " 1  2   3   435   6   71    2  6 73  4  78     95  5  82 1  9    68   6   435   2   9  6 ";
+/*  string _board_1 = " 1  2   3   435   6   71    2  6 73  4  78     95  5  82 1  9    68   6   435   2   9  6 ";
   Board b1 = Board(_board_1);
   b1.printBoard();
   cout << "o\n";
@@ -62,7 +64,7 @@ bool Board_test::test_setPossibilities() {
   cout << "a\n";
   if (b1.getNumberOfPossibilities(2, 0) != 0) {
     b1.printNumOfPossibilities();
-    b1.printPossibilities();
+    //b1.printPossibilities();
     cout << "1\n";
     return false;
   }
@@ -80,6 +82,20 @@ bool Board_test::test_setPossibilities() {
   cout << "e\n";
   if (b2.getNumberOfPossibilities(3, 5) != 1) {
     cout << "3\n";
+    return false;
+  }*/
+  return true;
+}
+
+bool Board_test::test_isTheSameBoard() {
+  string _board_1 = " 1  2   3   435   6   71    2  6 73  4  78     95  5  82 1  9    68   6   435   2   9  6 ";
+  Board b1 = Board(_board_1);
+  b1.setPossibilities();
+
+  string _board_2 = "516427983 824359176 397168452 169735248 782614395 453982617 945276831 671843529 238591764";
+  Board b2 = Board(_board_2);
+  
+  if (!b1.isTheSameBoard(&b2)) {
     return false;
   }
   return true;

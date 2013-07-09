@@ -179,8 +179,10 @@ void Board::printNumOfPossibilities() {
 void Board::printPossibilities() {
   for (int i = 0; i < board_x_size; ++i) {
     for (int j = 0; j < board_y_size; ++j) {
-      cout << " " << i << " " << j << "\n";
-      board[i][j].printPossibilities();
+      if (board[i][j].isEmpty()) {
+        cout << " " << i << " " << j << "\n";
+        board[i][j].printPossibilities();
+      }
     }
   }
 }
@@ -190,14 +192,20 @@ void Board::goThroughFieldsQueue(queue<pair<int, int> > fields) {
   while (!fields.empty()) {
     short num = board[fields.front().first][fields.front().second].getNum();
     // Check row till this one.
-    for (int i = 0; i < fields.front().first; ++i) {
-      //if (
+    for (int i = 0; i < board_x_size; ++i) {
+      if (i == fields.front().first) {
+        continue;
+      }
       if (board[i][fields.front().second].eraseFromPossibilities(num)) {
+        
         fields.push(make_pair<int, int>(i, fields.front().second));
       }
     }
     // Check column till this one.
-    for (int i = 0; i < fields.front().second; ++i) {
+    for (int i = 0; i < board_y_size; ++i) {
+      if (i == fields.front().second) {
+        continue;
+      }
       if (board[fields.front().first][i].eraseFromPossibilities(num)) {
         fields.push(make_pair<int, int>(fields.front().first, i));
       }
@@ -205,8 +213,11 @@ void Board::goThroughFieldsQueue(queue<pair<int, int> > fields) {
     // Check the square till this one..
     int sq_x = (int)(fields.front().first / 3) * square_x_size;
     int sq_y = (int)(fields.front().second / 3) * square_y_size;
-    for (int i = sq_x; i < fields.front().first; ++i) {
-      for (int j = sq_y; j < fields.front().second; ++j) {
+    for (int i = sq_x; i < sq_x + square_x_size; ++i) {
+      for (int j = sq_y; j < sq_y + square_y_size; ++j) {
+        if (i == fields.front().first && j == fields.front().second) {
+          continue;
+        }
         if (board[i][j].eraseFromPossibilities(num)) {
           fields.push(make_pair<int, int>(i, j));
         }
@@ -214,4 +225,15 @@ void Board::goThroughFieldsQueue(queue<pair<int, int> > fields) {
     }
     fields.pop();
   }
+}
+
+bool Board::isTheSameBoard(Board* b) {
+  for (int i = 0; i < board_x_size; ++i) {
+    for (int j = 0; j < board_y_size; ++j) {
+      if (board[i][j].getNum() != b->board[i][j].getNum()) {
+        return false;
+      }
+    }
+  }
+  return true;
 }
