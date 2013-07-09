@@ -1,6 +1,9 @@
 #include "Field.hpp"
 
+#include <iostream>
 #include "Utils.hpp"
+
+using namespace std;
 
 Field::Field() : num (0) {
   for (short i = min_num + 1; i <= max_num; ++i) {
@@ -53,10 +56,37 @@ bool Field::isPossible(short _num) {
   return false;
 }
 
-void Field::putPossibilities(set<short> _poss) {
+bool Field::putPossibilities(set<short> _poss) {
   possible = _poss;
+  if (possible.size() < 1) {
+    return false;
+  }
+  if (possible.size() == 1) {
+    return putNum((*possible.begin()));
+  }
+  return true;
 }
 
 int Field::getNumberOfPossibilities() {
   return possible.size();
+}
+
+void Field::printPossibilities() {
+  cout << "   ";
+  for (set<short>::iterator it = possible.begin(); it != possible.end(); ++it) {
+    cout << *(it) << " ";
+  }
+  cout << "\n";
+}
+
+// TODO: add test for   bool Field::eraseFromPossibilities(short _num)
+bool Field::eraseFromPossibilities(short _num) {
+  int pre_size = possible.size();
+  possible.erase(_num);
+  if (possible.size() == 1 && pre_size == 2) {
+    num = *(possible.begin());
+    possible.clear();
+    return true;
+  }
+  return false;
 }

@@ -13,11 +13,12 @@ class Field_test {
   bool test_getNum();
   bool test_putNum();
   bool test_isPossible();
+  bool test_putPossibilities();
 };
 
 bool Field_test::test() {
   return (test_Field() && test_isEmpty() && test_getNum() && test_putNum() &&
-      test_isPossible());
+      test_isPossible() && test_putPossibilities());
 }
 
 bool Field_test::test_Field() {
@@ -87,6 +88,39 @@ bool Field_test::test_isPossible() {
   num = 3;
   f = Field(num);
   if (f.isPossible(poss)) {
+    return false;
+  }
+  return true;
+}
+
+bool Field_test::test_putPossibilities() {
+  Field f = Field();
+  set<short> poss;
+  if (f.putPossibilities(poss)) {
+    return false;
+  }
+  if (f.getNumberOfPossibilities()) {
+    return false;
+  }
+  poss.insert(1);
+  poss.insert(2);
+  if (!f.putPossibilities(poss)) {
+    return false;
+  }
+  if (f.getNumberOfPossibilities() != 2) {
+    return false;
+  }
+  if (f.getNum()) {
+    return false;
+  }
+  poss.erase(1);
+  if (!f.putPossibilities(poss)) {
+    return false;
+  }
+  if (f.getNumberOfPossibilities() != 0) {
+    return false;
+  }
+  if (f.getNum() != 2) {
     return false;
   }
   return true;
