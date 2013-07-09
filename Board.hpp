@@ -18,6 +18,11 @@ class Board {
   void putNumberOnField(int x, int y, short _num);
   short getNumberFromField(int x, int y);
 
+  void setPossibilities();
+  set<short> getPossibilitiesFromSquare(int x, int y);
+  set<short> getPossibilitiesFromRow(int x, int y);
+  set<short> getPossibilitiesFromColumn(int x, int y);
+
  private:
   vector<vector<Field> > board;
 };

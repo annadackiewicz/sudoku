@@ -52,3 +52,11 @@ bool Field::isPossible(short _num) {
   }
   return false;
 }
+
+void Field::putPossibilities(set<short> _poss) {
+  possible = _poss;
+}
+
+int Field::getNumberOfPossibilities() {
+  return possible.size();
+}

@@ -13,6 +13,8 @@ class Field {
   short getNum();
   bool putNum(short _num);
   bool isPossible(short _num);
+  void putPossibilities(set<short> _poss);
+  int getNumberOfPossibilities();
 
  private:
   short num;
