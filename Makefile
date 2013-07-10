@@ -1,3 +1,6 @@
+sudoku.o:	Field.hpp Field.cpp Board.hpp Board.cpp main.cpp
+		g++ Field.hpp Field.cpp Board.hpp Board.cpp main.cpp -o main
+
 field_test.o:	Field.hpp Field.cpp Field_test.cpp
 		g++ Field.hpp Field.cpp Field_test.cpp -o field_test
 
