@@ -1,3 +1,6 @@
+// Board_test is a class that checks the correctness of the methods of Board
+// class. Board_test is also a friend class of Board.
+
 #include "Board.hpp"
 
 #include <iostream>
@@ -19,6 +22,7 @@ class Board_test {
   bool test_checkSquareForOnlyPossiblePlace();
 };
 
+// Launches all the tests.
 bool Board_test::test() {
   return (test_Board() && test_setPossibilities() && test_isTheSameBoard() &&
           test_checkRowForOnlyPossiblePlace() &&
@@ -62,47 +66,38 @@ bool Board_test::test_Board() {
   return true;
 }
 
+// Given a simple sudoku riddle based on a string this should solve it
+// completly, maching a given already solved board from a different string.
 bool Board_test::test_setPossibilities() {
-/*  string _board_1 = " 1  2   3   435   6   71    2  6 73  4  78     95  5  82 1  9    68   6   435   2   9  6 ";
-  Board b1 = Board(_board_1);
-  b1.printBoard();
-  cout << "o\n";
+  string board1 = " 1  2   3   435   6   71    2  6 73  4  78     95  5  82 1  9    68   6   435   2   9  6 ";
+  Board b1 = Board(board1);
   b1.setPossibilities();
-  cout << "a\n";
-  if (b1.getNumberOfPossibilities(2, 0) != 0) {
-    b1.printNumOfPossibilities();
-    //b1.printPossibilities();
-    cout << "1\n";
+
+  string board1_solved = "516427983 824359176 397168452 169735248 782614395 453982617 945276831 671843529 238591764";
+  Board b1_solved = Board(board1_solved);
+  if (!b1.isTheSameBoard(&b1_solved)) {
     return false;
   }
-  cout << "b\n";
-  if (b1.getNumberOfPossibilities(3, 0) != 1) {
-    cout << "2\n";
-    return false;
-  }
-  cout << "c\n";
-  string _board_2 = "1   2 3    4 1  5    3 67 8   86  5   4 3  4 2  5 2   8  19   5 18 6    6  9 2    3 4   7";
-  Board b2 = Board(_board_2);
-  b2.printBoard();
-  cout << "d\n";
-  b2.setPossibilities();
-  cout << "e\n";
-  if (b2.getNumberOfPossibilities(3, 5) != 1) {
-    cout << "3\n";
-    return false;
-  }*/
+
+  // TODO: add this puzzle to the test.
+  //string _board_2 = "1   2 3    4 1  5    3 67 8   86  5   4 3  4 2  5 2   8  19   5 18 6    6  9 2    3 4   7";
   return true;
 }
 
 bool Board_test::test_isTheSameBoard() {
-  string _board_1 = " 1  2   3   435   6   71    2  6 73  4  78     95  5  82 1  9    68   6   435   2   9  6 ";
-  Board b1 = Board(_board_1);
-  b1.setPossibilities();
+  string board_1 = " 1  2   3   435   6   71    2  6 73  4  78     95  5  82 1  9    68   6   435   2   9  6 ";
+  Board b1 = Board(board_1);
 
-  string _board_2 = "516427983 824359176 397168452 169735248 782614395 453982617 945276831 671843529 238591764";
-  Board b2 = Board(_board_2);
+  string board_2 = "516427983 824359176 397168452 169735248 782614395 453982617 945276831 671843529 238591764";
+  Board b2 = Board(board_2);
   
-  if (!b1.isTheSameBoard(&b2)) {
+  if (b1.isTheSameBoard(&b2)) {
+    return false;
+  }
+  // Exactly the same string as board_2.
+  string board_1_solved = "516427983 824359176 397168452 169735248 782614395 453982617 945276831 671843529 238591764";
+  Board b1_solved = Board(board_1_solved);
+  if (!b1_solved.isTheSameBoard(&b2)) {
     return false;
   }
   return true;
