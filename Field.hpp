@@ -5,7 +5,9 @@
 
 class Field {
  public:
+  // COnstructor of a field which is set to be empty.
   Field();
+  // Constructor of a field with given number.
   Field(short _num);
   ~Field();
 
