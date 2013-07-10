@@ -1,3 +1,7 @@
+// Field_test is a class that is used to check the correctness of Field class
+// methods. Field class doesn't have private functions so for now Field_test
+// doesn't need to be a friend class of Field.
+
 #include "Field.hpp"
 
 #include <iostream>
@@ -16,6 +20,7 @@ class Field_test {
   bool test_putPossibilities();
 };
 
+// Launches the tests.
 bool Field_test::test() {
   return (test_Field() && test_isEmpty() && test_getNum() && test_putNum() &&
       test_isPossible() && test_putPossibilities());
@@ -93,6 +98,12 @@ bool Field_test::test_isPossible() {
   return true;
 }
 
+// Checks putting the possible numbers to a field and getting the number of
+// the possibilities:
+//  an empty set, which should should return false,
+//  a set with more than one number,
+//  a set with exactly one possibility which result in putting that number into
+//      the field.
 bool Field_test::test_putPossibilities() {
   Field f = Field();
   set<short> poss;
