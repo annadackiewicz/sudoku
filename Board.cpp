@@ -1,6 +1,7 @@
 #include "Board.hpp"
 
 #include <iostream>
+#include <map>
 #include "Utils.hpp"
 
 using namespace std;
@@ -236,4 +237,100 @@ bool Board::isTheSameBoard(Board* b) {
     }
   }
   return true;
+}
+
+queue<pair<int, int> > Board::putNumbersIntoOnlyPossiblePlaces() {
+  queue<pair<int, int> > fields_to_check;
+  for (int i = 0; i < board_x_size; ++i) {
+    for (int j = 0; j < board_y_size; ++j) {
+      if (board[i][j].isEmpty()) {
+        fields_to_check.push(make_pair<int, int>(i, j));
+      }
+    }
+  }
+  queue<pair<int, int> > newly_filled_fields;
+  while (!fields_to_check.empty()) {
+    if (checkRowForOnlyPossiblePlace(fields_to_check.front()) ||
+        checkColumnForOnlyPossiblePlace(fields_to_check.front()) ||
+        checkSquareForOnlyPossiblePlace(fields_to_check.front())) {
+      newly_filled_fields.push(fields_to_check.front());
+    }
+  }
+  return newly_filled_fields;
+}
+
+bool Board::checkRowForOnlyPossiblePlace(pair<int, int> f_coords) {
+  for (int i = min_num + 1; i <= max_num; ++i) {
+    bool is_somewhere_else_possible = false;
+    if (!board[f_coords.first][f_coords.second].isPossible(i)) {
+      continue;
+    }
+    for (int j = 0; j < board_x_size; ++j) {
+      if (j == f_coords.second) {
+        continue;
+      }
+      if (board[f_coords.first][j].isPossible(i)) {
+        is_somewhere_else_possible = true;
+        break;
+      }
+    }
+    if (!is_somewhere_else_possible) {
+      board[f_coords.first][f_coords.second].putNum(i);
+      return true;
+    }
+  }
+  return false;
+}
+
+bool Board::checkColumnForOnlyPossiblePlace(pair<int, int> f_coords) {
+  for (int i = min_num + 1; i <= max_num; ++i) {
+    bool is_somewhere_else_possible = false;
+    if (!board[f_coords.first][f_coords.second].isPossible(i)) {
+      continue;
+    }
+    for (int j = 0; j < board_y_size; ++j) {
+      if (j == f_coords.first) {
+        continue;
+      }
+      if (board[j][f_coords.second].isPossible(i)) {
+        is_somewhere_else_possible = true;
+        break;
+      }
+    }
+    if (!is_somewhere_else_possible) {
+      board[f_coords.first][f_coords.second].putNum(i);
+      return true;
+    }
+  }
+  return false;
+}
+
+bool Board::checkSquareForOnlyPossiblePlace(pair<int, int> f_coords) {
+  for (int i = min_num + 1; i <= max_num; ++i) {
+    bool is_somewhere_else_possible = false;
+    if (!board[f_coords.first][f_coords.second].isPossible(i)) {
+      continue;
+    }
+    int sq_x = (int)(f_coords.first / 3) * square_x_size;
+    int sq_y = (int)(f_coords.second / 3) * square_y_size;
+    for (int j = sq_x; j < sq_x + square_x_size; ++j) {
+      for (int k = sq_y; k <= sq_y + square_y_size; ++k) {
+        if (j == f_coords.first) {
+          continue;
+        }
+        if (board[j][k].isPossible(i)) {
+          is_somewhere_else_possible = true;
+          break;
+        }
+      }
+      if (is_somewhere_else_possible) {
+        break;
+      }
+    }
+    if (!is_somewhere_else_possible) {
+      board[f_coords.first][f_coords.second].putNum(i);
+      return true;
+    }
+  }
+  return false;
 }

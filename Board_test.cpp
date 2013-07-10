@@ -13,10 +13,17 @@ class Board_test {
   bool test_setPossibilities();
 
   bool test_isTheSameBoard();
+
+  bool test_checkRowForOnlyPossiblePlace();
+  bool test_checkColumnForOnlyPossiblePlace();
+  bool test_checkSquareForOnlyPossiblePlace();
 };
 
 bool Board_test::test() {
-  return (test_Board() && test_setPossibilities() && test_isTheSameBoard());
+  return (test_Board() && test_setPossibilities() && test_isTheSameBoard() &&
+          test_checkRowForOnlyPossiblePlace() &&
+          test_checkColumnForOnlyPossiblePlace() &&
+          test_checkSquareForOnlyPossiblePlace());
 }
 
 bool Board_test::test_Board() {
@@ -96,6 +103,56 @@ bool Board_test::test_isTheSameBoard() {
   Board b2 = Board(_board_2);
   
   if (!b1.isTheSameBoard(&b2)) {
+    return false;
+  }
+  return true;
+}
+
+bool Board_test::test_checkRowForOnlyPossiblePlace() {
+  // Board with row that has two fields in two rows that can be filled.
+  // (8, 3): 1, (3, 5): 6; the first after setPossibilities, the second after
+  // checkRowForOnlyPossiblePlace.
+  string board = "     6                        2 3 45 6   6                        1      1       1  6    ";
+  Board b = Board(board);
+  b.setPossibilities();
+  b.checkRowForOnlyPossiblePlace(make_pair<int, int>(3, 8));
+  if (b.board[3][8].getNum() != 1) {
+    return false;
+  }
+  b.checkRowForOnlyPossiblePlace(make_pair<int, int>(5, 3));
+  if (b.board[5][3].getNum() != 6) {
+    return false;
+  }
+}
+
+// Board with two columns that have fields of which first can be filled by
+// setPossibilities and second with checkColumnForOnlyPossiblePlace.
+bool Board_test::test_checkColumnForOnlyPossiblePlace() {
+  string board = "   1    8    2       8           3      8 6          4  8   6    8       5        89     ";
+  Board b = Board(board);
+  b.setPossibilities();
+  b.checkColumnForOnlyPossiblePlace(make_pair<int, int>(2, 3));
+  if (b.board[2][3].getNum() != 6) {
+    return false;
+  }
+  b.checkColumnForOnlyPossiblePlace(make_pair<int, int>(7, 7));
+  if (b.board[7][7].getNum() != 8) {
+    return false;
+  }
+  return true;
+}
+
+// Board with two squares which can be only filled by checkSquare...
+bool Board_test::test_checkSquareForOnlyPossiblePlace() {
+  string board = " 941 7       52  49    6 3                9                       9      9               ";
+  Board b = Board(board);
+  b.setPossibilities();
+  b.checkSquareForOnlyPossiblePlace(make_pair<int, int>(2, 4));
+  if (b.board[2][4].getNum() != 4) {
+    return false;
+  }
+  b.checkSquareForOnlyPossiblePlace(make_pair<int, int>(8, 0));
+  if (b.board[8][0].getNum() != 9) {
     return false;
   }
   return true;
