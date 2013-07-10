@@ -42,6 +42,9 @@ class Board {
   // Checking if the given board is the same as this one.
   bool isTheSameBoard(Board* b);
 
+  // Check if full board is filled.
+  bool isSolved();
+
  private:
   // The board of sudoku based on Field class.
   vector<vector<Field> > board;

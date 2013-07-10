@@ -198,7 +198,7 @@ void Board::goThroughFieldsQueue(queue<pair<int, int> > fields) {
         continue;
       }
       if (board[i][fields.front().second].eraseFromPossibilities(num)) {
-        
+        --number_of_empty;
         fields.push(make_pair<int, int>(i, fields.front().second));
       }
     }
@@ -208,6 +208,7 @@ void Board::goThroughFieldsQueue(queue<pair<int, int> > fields) {
         continue;
       }
       if (board[fields.front().first][i].eraseFromPossibilities(num)) {
+        --number_of_empty;
         fields.push(make_pair<int, int>(fields.front().first, i));
       }
     }
@@ -220,6 +221,7 @@ void Board::goThroughFieldsQueue(queue<pair<int, int> > fields) {
           continue;
         }
         if (board[i][j].eraseFromPossibilities(num)) {
+          --number_of_empty;
           fields.push(make_pair<int, int>(i, j));
         }
       }
@@ -253,6 +255,7 @@ queue<pair<int, int> > Board::putNumbersIntoOnlyPossiblePlaces() {
     if (checkRowForOnlyPossiblePlace(fields_to_check.front()) ||
         checkColumnForOnlyPossiblePlace(fields_to_check.front()) ||
         checkSquareForOnlyPossiblePlace(fields_to_check.front())) {
+      --number_of_empty;
       newly_filled_fields.push(fields_to_check.front());
     }
   }
@@ -276,6 +279,7 @@ bool Board::checkRowForOnlyPossiblePlace(pair<int, int> f_coords) {
     }
     if (!is_somewhere_else_possible) {
       board[f_coords.first][f_coords.second].putNum(i);
+      --number_of_empty;
       return true;
     }
   }
@@ -299,6 +303,7 @@ bool Board::checkColumnForOnlyPossiblePlace(pair<int, int> f_coords) {
     }
     if (!is_somewhere_else_possible) {
       board[f_coords.first][f_coords.second].putNum(i);
+      --number_of_empty;
       return true;
     }
   }
@@ -329,8 +334,16 @@ bool Board::checkSquareForOnlyPossiblePlace(pair<int, int> f_coords) {
     }
     if (!is_somewhere_else_possible) {
       board[f_coords.first][f_coords.second].putNum(i);
+      --number_of_empty;
       return true;
     }
   }
   return false;
+}
+
+bool Board::isSolved() {
+  if (number_of_empty > 0) {
+    return false;
+  }
+  return true;
 }

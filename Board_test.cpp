@@ -20,6 +20,7 @@ class Board_test {
   bool test_checkRowForOnlyPossiblePlace();
   bool test_checkColumnForOnlyPossiblePlace();
   bool test_checkSquareForOnlyPossiblePlace();
+  bool test_isSolved();
 };
 
 // Launches all the tests.
@@ -27,7 +28,7 @@ bool Board_test::test() {
   return (test_Board() && test_setPossibilities() && test_isTheSameBoard() &&
           test_checkRowForOnlyPossiblePlace() &&
           test_checkColumnForOnlyPossiblePlace() &&
-          test_checkSquareForOnlyPossiblePlace());
+          test_checkSquareForOnlyPossiblePlace() && test_isSolved());
 }
 
 bool Board_test::test_Board() {
@@ -148,6 +149,19 @@ bool Board_test::test_checkSquareForOnlyPossiblePlace() {
   }
   b.checkSquareForOnlyPossiblePlace(make_pair<int, int>(8, 0));
   if (b.board[8][0].getNum() != 9) {
+    return false;
+  }
+  return true;
+}
+
+bool Board_test::test_isSolved() {
+  string board_1 = " 1  2   3   435   6   71    2  6 73  4  78     95  5  82 1  9    68   6   435   2   9  6 ";
+  Board b1 = Board(board_1);
+  if (b1.isSolved()) {
+    return false;
+  }
+  b1.setPossibilities();
+  if (!b1.isSolved()) {
     return false;
   }
   return true;
