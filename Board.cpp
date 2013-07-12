@@ -272,7 +272,7 @@ bool Board::putNumbersIntoOnlyPossiblePlaces() {
     if (checkRowForOnlyPossiblePlace(fields_to_check.front()) ||
         checkColumnForOnlyPossiblePlace(fields_to_check.front()) ||
         checkSquareForOnlyPossiblePlace(fields_to_check.front())) {
-      --number_of_empty;
+      //--number_of_empty;
       newly_filled_fields.push(fields_to_check.front());
       goThroughFieldsQueue(newly_filled_fields);
       any_new = true;
@@ -379,11 +379,16 @@ bool Board::solve() {
   setPossibilities();
   if (number_of_empty) {
     while (number_of_empty) {
-      queue<pair<int, int> > fields;
-      if (putNumbersIntoOnlyPossiblePlaces()) {
-        return false;
+      cout << number_of_empty << "\n";
+      if (!putNumbersIntoOnlyPossiblePlaces()) {
+        break;
       }
     }
+  }
+  cout << "end: " << number_of_empty << "\n";
+  printBoard();
+  if (number_of_empty) {
+    return false;
   }
   return true;
 }

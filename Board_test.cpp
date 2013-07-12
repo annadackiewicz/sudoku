@@ -23,6 +23,7 @@ class Board_test {
   bool test_isSolved();
 
   bool test_putNumbersIntoOnlyPossiblePlaces();
+  bool test_solve();
 };
 
 // Launches all the tests.
@@ -31,7 +32,7 @@ bool Board_test::test() {
           test_checkRowForOnlyPossiblePlace() &&
           test_checkColumnForOnlyPossiblePlace() &&
           test_checkSquareForOnlyPossiblePlace() && test_isSolved() &&
-          test_putNumbersIntoOnlyPossiblePlaces());
+          test_putNumbersIntoOnlyPossiblePlaces() && test_solve());
 }
 
 bool Board_test::test_Board() {
@@ -178,6 +179,12 @@ bool Board_test::test_putNumbersIntoOnlyPossiblePlaces() {
     return false;
   }
   return (b.putNumbersIntoOnlyPossiblePlaces());
+}
+
+bool Board_test::test_solve() {
+  string board = " 12       3  4256   547       72 63     86     34     18 69       315   5197  6       92 ";
+  Board b = Board(board);
+  return (b.solve());
 }
 
 int main() {
