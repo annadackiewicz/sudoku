@@ -24,6 +24,8 @@ class Board_test {
 
   bool test_putNumbersIntoOnlyPossiblePlaces();
   bool test_solve();
+
+  bool test_isCorrect();
 };
 
 // Launches all the tests.
@@ -32,7 +34,8 @@ bool Board_test::test() {
           test_checkRowForOnlyPossiblePlace() &&
           test_checkColumnForOnlyPossiblePlace() &&
           test_checkSquareForOnlyPossiblePlace() && test_isSolved() &&
-          test_putNumbersIntoOnlyPossiblePlaces() && test_solve());
+          test_putNumbersIntoOnlyPossiblePlaces() && test_solve() &&
+          test_isCorrect());
 }
 
 bool Board_test::test_Board() {
@@ -184,7 +187,38 @@ bool Board_test::test_putNumbersIntoOnlyPossiblePlaces() {
 bool Board_test::test_solve() {
   string board = " 12       3  4256   547       72 63     86     34     18 69       315   5197  6       92 ";
   Board b = Board(board);
-  return (b.solve());
+  if (!b.solve()) {
+    return false;
+  }
+
+  // There is an error on this board which makes it impossible to solve due to
+  // a conflict.
+  string board_error = " 12       3  4256   547       72 63     86     34     18 69       315   5197  6  3    92 ";
+  Board b_error = Board(board_error);
+  if (b_error.solve()) {
+    return false;
+  }
+  return true;
+}
+
+bool Board_test::test_isCorrect() {
+  string board_correct = " 12       3  4256   547       72 63     86     34     18 69       315   5197  6       92 ";
+  Board b_correct = Board(board_correct);
+  if (!b_correct.isCorrect()) {
+    cout << "test isCorrect is incorrect on correct not yet solved example\n";
+    return false;
+  }
+  b_correct.solve();
+  if (b_correct.isCorrect()) {
+    return false;
+  }
+  // This example cannot be solved however it still is a correct board.
+  string board_wrong1 = " 12       3 64256   547       72 63     86     34     18 69       315    5197  6  3    92 ";
+  Board b_wrong1 = Board(board_wrong1);
+  if (!b_wrong1.isCorrect()) {
+    return false;
+  }
+  return true;
 }
 
 int main() {

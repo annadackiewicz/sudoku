@@ -379,16 +379,51 @@ bool Board::solve() {
   setPossibilities();
   if (number_of_empty) {
     while (number_of_empty) {
-      cout << number_of_empty << "\n";
       if (!putNumbersIntoOnlyPossiblePlaces()) {
         break;
       }
     }
   }
-  cout << "end: " << number_of_empty << "\n";
-  printBoard();
   if (number_of_empty) {
     return false;
+  }
+  return true;
+}
+
+bool Board::isCorrect() {
+  for (int i = 0; i < board_x_size; ++i) {
+    for (int j = 0; j < board_y_size; ++j) {
+      if (!board[i][j].isEmpty()) {
+        short num = board[i][j].getNum();
+        // Check row.
+        for (int k = 0; k < board_x_size; ++k) {
+          if (k != i) {
+            if (board[k][j].getNum() == num) {
+              return false;
+            }
+          }
+        }
+        // Check column.
+        for (int k = 0; k < board_y_size; ++k) {
+          if (k != j) {
+            if (board[i][k].getNum() == num) {
+              return false;
+            }
+          }
+        }
+        int sq_x = (int)(i / 3) * square_x_size;
+        int sq_y = (int)(j / 3) * square_y_size;
+        for (int k = sq_x; k < sq_x + square_x_size; ++k) {
+          for (int l = sq_y; l < sq_y + square_y_size; ++l) {
+            if (i != k || j != l) {
+              if (board[k][l].getNum() == num) {
+                return false;
+              }
+            }
+          }
+        }
+      }
+    }
   }
   return true;
 }

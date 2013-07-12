@@ -47,6 +47,10 @@ class Board {
 
   bool solve();
 
+  // Check if the board is a correct -- the numbers in rows columns and squares
+  // are used only once.
+  bool isCorrect();
+
  private:
   // The board of sudoku based on Field class.
   vector<vector<Field> > board;
