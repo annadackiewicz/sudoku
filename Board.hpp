@@ -45,6 +45,8 @@ class Board {
   // Check if full board is filled.
   bool isSolved();
 
+  bool solve();
+
  private:
   // The board of sudoku based on Field class.
   vector<vector<Field> > board;
@@ -65,12 +67,22 @@ class Board {
   // its row, column and square deleting the number from the possible numbers of
   // other fields and adding fields with only one possible solution to the end
   // of the queue.
-  void goThroughFieldsQueue(queue<pair<int, int> > fields);
+  // Returns:
+  //  true if any new field has been filled.
+  bool goThroughFieldsQueue(queue<pair<int, int> > fields);
 
   // Goes through the board, trying to detect the field in row, column or square
   // that can hold a number that other can't (only possible place for this
   // number).
-  queue<pair<int, int> > putNumbersIntoOnlyPossiblePlaces();
+  //
+  bool putNumbersIntoOnlyPossiblePlaces();
+
+  // Analyses the f field on the board by taking possibilities from its' row
+  // column and square.
+  // Returns:
+  //  true   if any new field has been filled.
+  bool eraseFromPossibilitiesInRowColumnAndSquare(
+      queue<pair<int, int> >* fields, pair<int, int> f);
 
   // Check if there exist a number in this field that can't be put anywhere
   // beside this place in the whole row. 

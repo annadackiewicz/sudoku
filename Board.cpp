@@ -189,45 +189,59 @@ void Board::printPossibilities() {
 }
 
 // TODO: add test for   void Fields::goThroughFieldsQueue(queue<pair<int, int> > fields)
-void Board::goThroughFieldsQueue(queue<pair<int, int> > fields) {
+bool Board::goThroughFieldsQueue(queue<pair<int, int> > fields) {
+  bool any_new = false;
   while (!fields.empty()) {
-    short num = board[fields.front().first][fields.front().second].getNum();
-    // Check row till this one.
-    for (int i = 0; i < board_x_size; ++i) {
-      if (i == fields.front().first) {
-        continue;
-      }
-      if (board[i][fields.front().second].eraseFromPossibilities(num)) {
-        --number_of_empty;
-        fields.push(make_pair<int, int>(i, fields.front().second));
-      }
-    }
-    // Check column till this one.
-    for (int i = 0; i < board_y_size; ++i) {
-      if (i == fields.front().second) {
-        continue;
-      }
-      if (board[fields.front().first][i].eraseFromPossibilities(num)) {
-        --number_of_empty;
-        fields.push(make_pair<int, int>(fields.front().first, i));
-      }
-    }
-    // Check the square till this one..
-    int sq_x = (int)(fields.front().first / 3) * square_x_size;
-    int sq_y = (int)(fields.front().second / 3) * square_y_size;
-    for (int i = sq_x; i < sq_x + square_x_size; ++i) {
-      for (int j = sq_y; j < sq_y + square_y_size; ++j) {
-        if (i == fields.front().first && j == fields.front().second) {
-          continue;
-        }
-        if (board[i][j].eraseFromPossibilities(num)) {
-          --number_of_empty;
-          fields.push(make_pair<int, int>(i, j));
-        }
-      }
+    if (eraseFromPossibilitiesInRowColumnAndSquare(&fields, fields.front())) {
+      any_new = true;
     }
     fields.pop();
   }
+  return any_new;
+}
+
+bool Board::eraseFromPossibilitiesInRowColumnAndSquare(
+    queue<pair<int, int> >* fields, pair<int, int> f) {
+  bool any_new = false;
+  short num = board[f.first][f.second].getNum();
+  // Check row till this one.
+  for (int i = 0; i < board_x_size; ++i) {
+    if (i == f.first) {
+      continue;
+    }
+    if (board[i][f.second].eraseFromPossibilities(num)) {
+      --number_of_empty;
+      fields->push(make_pair<int, int>(i, f.second));
+      any_new = true;
+    }
+  }
+  // Check column till this one.
+  for (int i = 0; i < board_y_size; ++i) {
+    if (i == f.second) {
+      continue;
+    }
+    if (board[f.first][i].eraseFromPossibilities(num)) {
+      --number_of_empty;
+      fields->push(make_pair<int, int>(f.first, i));
+      any_new = true;
+    }
+  }
+  // Check the square till this one..
+  int sq_x = (int)(f.first / 3) * square_x_size;
+  int sq_y = (int)(f.second / 3) * square_y_size;
+  for (int i = sq_x; i < sq_x + square_x_size; ++i) {
+    for (int j = sq_y; j < sq_y + square_y_size; ++j) {
+      if (i == f.first && j == f.second) {
+        continue;
+      }
+      if (board[i][j].eraseFromPossibilities(num)) {
+        --number_of_empty;
+        fields->push(make_pair<int, int>(i, j));
+        any_new = true;
+      }
+    }
+  }
+  return any_new;
 }
 
 bool Board::isTheSameBoard(Board* b) {
@@ -241,7 +255,7 @@ bool Board::isTheSameBoard(Board* b) {
   return true;
 }
 
-queue<pair<int, int> > Board::putNumbersIntoOnlyPossiblePlaces() {
+bool Board::putNumbersIntoOnlyPossiblePlaces() {
   queue<pair<int, int> > fields_to_check;
   for (int i = 0; i < board_x_size; ++i) {
     for (int j = 0; j < board_y_size; ++j) {
@@ -250,16 +264,29 @@ queue<pair<int, int> > Board::putNumbersIntoOnlyPossiblePlaces() {
       }
     }
   }
-  queue<pair<int, int> > newly_filled_fields;
+  queue<pair<int, int> > rest_of_fields;
+  bool any_new = false;
+  bool any_new_this_time = false;
   while (!fields_to_check.empty()) {
+    queue<pair<int, int> > newly_filled_fields;
     if (checkRowForOnlyPossiblePlace(fields_to_check.front()) ||
         checkColumnForOnlyPossiblePlace(fields_to_check.front()) ||
         checkSquareForOnlyPossiblePlace(fields_to_check.front())) {
       --number_of_empty;
       newly_filled_fields.push(fields_to_check.front());
+      goThroughFieldsQueue(newly_filled_fields);
+      any_new = true;
+      any_new_this_time = true;
+    } else {
+      rest_of_fields.push(fields_to_check.front());
+    }
+    fields_to_check.pop();
+    if (fields_to_check.empty() && any_new_this_time) {
+      fields_to_check = rest_of_fields;
+      any_new_this_time = false;
     }
   }
-  return newly_filled_fields;
+  return any_new;
 }
 
 bool Board::checkRowForOnlyPossiblePlace(pair<int, int> f_coords) {
@@ -344,6 +371,19 @@ bool Board::checkSquareForOnlyPossiblePlace(pair<int, int> f_coords) {
 bool Board::isSolved() {
   if (number_of_empty > 0) {
     return false;
+  }
+  return true;
+}
+
+bool Board::solve() {
+  setPossibilities();
+  if (number_of_empty) {
+    while (number_of_empty) {
+      queue<pair<int, int> > fields;
+      if (putNumbersIntoOnlyPossiblePlaces()) {
+        return false;
+      }
+    }
   }
   return true;
 }
